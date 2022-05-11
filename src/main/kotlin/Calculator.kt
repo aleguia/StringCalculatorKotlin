@@ -8,12 +8,12 @@ object Calculator {
         if (sanitizedNumbers.isEmpty()) return 0
 
         var delimiter = ","
-        val regex = "(/{2}.)(.*)".toRegex()
+        val regex = "(/{2}.*)(\\n{1}.*)".toRegex()
 
-        if (regex.containsMatchIn(sanitizedNumbers)) {
-            val (delimiterGroup, numbersGroup) = regex.find(sanitizedNumbers)!!.destructured
-            sanitizedNumbers = numbersGroup
-            delimiter = extractDelimiter(delimiterGroup)
+        if (regex.containsMatchIn(numbers)) {
+            val (delimiterGroup, numbersGroup) = regex.find(numbers)!!.destructured
+            sanitizedNumbers = handleNewLines(numbersGroup)
+            delimiter = extractDelimiter(handleNewLines(delimiterGroup))
         }
 
         val negativeNumbersList = sanitizedNumbers.split(delimiter).filter { Integer.parseInt(it) < 0 }
@@ -22,9 +22,14 @@ object Calculator {
             throw Error.NegativesNotAllowed(negativeNumbersList)
         }
 
-        val numbersList: List<Int> = sanitizedNumbers.split(delimiter).map { Integer.parseInt(it)}
+        val numbersList: List<Int> = sanitizedNumbers.split(delimiter).map {
+            if(Integer.parseInt(it) <=1000) {
+                Integer.parseInt(it)
+            } else {
+                0
+            }
+        }
         return numbersList.sum()
-
     }
 
     private fun extractDelimiter(text: String): String {
@@ -78,6 +83,9 @@ fun main(args: Array<String>) {
         println(ex.message)
     }
 
+    //Bonus examples
 
+    input = "//@\n2@3@8@10@1000@1001"
+    println("Input: $input Result: ${Calculator.add(input)}")
 
 }
