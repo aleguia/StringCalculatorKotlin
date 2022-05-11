@@ -10,28 +10,37 @@ object Calculator {
         var delimiter = ","
         val regex = "(/{2}.)(.*)".toRegex()
 
-        if (regex.containsMatchIn(sanitizedNumbers)){
+        if (regex.containsMatchIn(sanitizedNumbers)) {
             val (delimiterGroup, numbersGroup) = regex.find(sanitizedNumbers)!!.destructured
             sanitizedNumbers = numbersGroup
             delimiter = extractDelimiter(delimiterGroup)
         }
 
-        val numbersList = sanitizedNumbers.split(delimiter)
-            .map { stringNumber -> Integer.parseInt(stringNumber) }
+        val negativeNumbersList = sanitizedNumbers.split(delimiter).filter { Integer.parseInt(it) < 0 }
 
+        if(negativeNumbersList.isNotEmpty()){
+            throw Error.NegativesNotAllowed(negativeNumbersList)
+        }
+
+        val numbersList: List<Int> = sanitizedNumbers.split(delimiter).map { Integer.parseInt(it)}
         return numbersList.sum()
+
     }
 
-    private fun extractDelimiter(text: String): String{
+    private fun extractDelimiter(text: String): String {
         return text.substring(2)
     }
 
     private fun handleNewLines(text: String): String {
         return text.replace("\n", "")
     }
+
+    sealed class Error(override val message: String): Exception() {
+        class NegativesNotAllowed(numbers: List<String>): Error("Negatives not allowed: $numbers")
+    }
 }
 
-fun main(args: Array<String>){
+fun main(args: Array<String>) {
     //Step 1 examples
     var input = "1,2,5"
     println("Input: $input Result: ${Calculator.add(input)}")
@@ -53,4 +62,22 @@ fun main(args: Array<String>){
 
     input = "//@\n2@3@8"
     println("Input: $input Result: ${Calculator.add(input)}")
+
+    //Step  4 examples
+    try {
+        input = "//@\n2@3@0@-2@8@-1"
+        println("Input: $input Result: ${Calculator.add(input)}")
+    }catch (ex: Exception){
+        println(ex.message)
+    }
+
+    try {
+        input = "//;\n1;-3;4"
+        println("Input: $input Result: ${Calculator.add(input)}")
+    }catch (ex: Exception){
+        println(ex.message)
+    }
+
+
+
 }
