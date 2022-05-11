@@ -40,4 +40,9 @@ internal class CalculatorTest{
     fun `should return sum when only a new lines is passed`(){
         assertEquals(0, Calculator.add("\n"))
     }
+
+    @Test
+    fun `should handle custom delimiter`(){
+        assertEquals(13, Calculator.add("//@\n2@3@8"))
+    }
 }
