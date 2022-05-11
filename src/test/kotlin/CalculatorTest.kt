@@ -30,4 +30,14 @@ internal class CalculatorTest{
     fun `Should sum any number of numbers passed`(){
         assertEquals(20, Calculator.add("1,7,4,8"))
     }
+
+    @Test
+    fun `should manage new lines passed`(){
+        assertEquals(6, Calculator.add("1\n,2,\n3"))
+    }
+
+    @Test
+    fun `should return sum when only a new lines is passed`(){
+        assertEquals(0, Calculator.add("\n"))
+    }
 }
