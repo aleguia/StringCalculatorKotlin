@@ -42,6 +42,7 @@ The evolution of functionality is in branches as follows:
     The exception should list the number(s) that caused the exception
     
 *Branch:* **Bonus** 
+
 5. Bonus
   - 5.1 Numbers larger than 1000 should be ignored.
   -  5.2 Delimiters can be arbitrary length
