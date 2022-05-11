@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.util.Calendar
+import kotlin.test.assertFailsWith
 
 /*
 * Created by Fernando Leguia on May 11, 2022
@@ -44,5 +46,18 @@ internal class CalculatorTest{
     @Test
     fun `should handle custom delimiter`(){
         assertEquals(13, Calculator.add("//@\n2@3@8"))
+    }
+
+    @Test
+    fun `should throw negatives not allowed error when negative numbers passed`(){
+        assertThrows(Calculator.Error.NegativesNotAllowed::class.java, { Calculator.add("//@\n2@3@0@-2@8@-1") } )
+    }
+
+    @Test
+    fun `should list the negative numbers when throw negatives not allowed`(){
+        val exception = assertFailsWith<Calculator.Error.NegativesNotAllowed> (
+            block = { Calculator.add("//@\n2@3@0@-2@8@-1")  }
+        )
+        assertEquals(exception.message, "Negatives not allowed: [-2, -1]")
     }
 }
