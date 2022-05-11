@@ -60,4 +60,14 @@ internal class CalculatorTest{
         )
         assertEquals(exception.message, "Negatives not allowed: [-2, -1]")
     }
+
+    @Test
+    fun `should ignore numbers larger than 1000`(){
+        assertEquals(0, Calculator.add("1001"))
+    }
+
+    @Test
+    fun `Delimiters of arbitrary lenght are allowed`(){
+        assertEquals(13, Calculator.add("//***\n2***3***8"))
+    }
 }
